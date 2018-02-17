@@ -39,7 +39,7 @@ int main()
         if (c == '+')
         {
             scanf("%d%lld", &i, &value);
-            update(i+1,value,N);
+            update(i + 1, value, N);
         }
 
         if (c == '?')

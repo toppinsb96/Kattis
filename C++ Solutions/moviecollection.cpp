@@ -1,19 +1,29 @@
 #include <cstdio>
+#include <cstring>
 
-long long tree[5000005];
 
-/*
-void update(int i, long long value, int N)
+// A maximum size to expand the fenwick tree and loops to max size available.
+const long long maxSize = 100005;
+
+long long tree[2 * maxSize];
+long long location[maxSize];
+
+
+void update(int index, long long value)
 {
-    while(i <= N)
+    int i = index;
+
+    while(i < 2 * maxSize)
     {
-        tree[i] += value;
-        i += i & -i;
+      tree[i] += value;
+      i += i & -i;
     }
 }
-long long sum(int i)
+
+long long sum(int index)
 {
      long long sum = 0;
+     int i = index;
 
      while (i > 0)
      {
@@ -22,32 +32,40 @@ long long sum(int i)
      }
      return sum;
 }
-*/
 
-int main()
-{
+int main() {
+    int Q;
+    int m, r;
+    int key, index;
 
-    //long long value;
-    //int N, Q, i;
-    //char c;
-    scanf("%d", &n);
+    std::scanf("%d", &Q);
 
     for(int j = 0; j < Q; j++)
     {
-        scanf(" %c ", &c);
+        memset(tree, 0, sizeof(tree));
+        std::scanf("%d %d", &m, &r);
 
-
-        if (c == '+')
+        for (int i = 1; i <= m; i++)
         {
-            scanf("%d%lld", &i, &value);
-            update(i+1,value,N);
+            update(i, 1);
+            location[i] = m - i + 1;
         }
 
-        if (c == '?')
+        for (int i = m + 1; i <= m + r; i++)
         {
-            scanf("%d", &i);
-            printf("%lld\n", sum(i));
+            std::scanf("%d", &key);
+
+            index = location[key];
+
+            std::printf("%lld ", m - sum(index));
+
+            update(index, -1);
+            update(i, 1);
+
+
+            location[key] = i;
         }
+        std::puts("");
     }
 
     return 0;
