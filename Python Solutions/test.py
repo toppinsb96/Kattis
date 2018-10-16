@@ -1,55 +1,38 @@
-class UnionFind:
-    def __init__(self):
-        self.par  = {}
-        self.tree = {}
-
-    def addEdge(self, a, b):
-        A = self.getParent(a)
-        B = self.getParent(b)
-
-        if(B == A): return self.tree[A]
-
-        # Swap A and B based on size
-        if(self.tree[A] < self.tree[B]):
-            A = B
-            B = A
-        self.par[B] = A
-        self.tree[A] += self.tree[B]
-
-        return self.tree[A]
-
-    def getParent(self, i):
-        self.existence(i)
-        if(self.par[i] != None):
-            i = self.par[i]
-        return i
-
-    def existence(self, i):
-        if i not in self.par:
-            self.par[i] = None
-            self.tree[i] = 1
-            return i
-
-    def getConnection(self, a, b):
-        return self.getParent(str(a)) == self.getParent(str(b))
-
-numOfNotConnected = 0
-house = 2
-
-N, M = map(int, input().split())
-g = UnionFind()
-
-# Create Graph
-for i in range(M):
-    a, b = input().split()
-    g.addEdge(a, b)
-
-# check connections
-while(house < N + 1):
-    if(not g.getConnection(1, house)):
-        numOfNotConnected += 1
-        print(house)
-    house += 1
+component = {}
+count = {}
 
 
-if(numOfNotConnected == 0): print("Connected")
+def find(x):
+    if x not in component:
+        component[x] = x
+        count[x] = 1
+
+    if x == component[x]:
+        return x
+    else:
+        component[x] = find(component[x])
+        return component[x]
+
+
+def union(x, y):
+    xx = find(x)
+    yy = find(y)
+
+    if xx != yy:
+        component[xx] = yy
+        count[xx] = count[xx] + count[yy]
+        count[yy] = count[xx]
+
+    return count[xx]
+
+
+T = int(input())
+for t in range(T):
+    F = int(input())
+    component.clear()
+    count.clear()
+
+    for f in range(F):
+        x, y = input().split()
+        ans = union(x,y)
+        print(ans)
